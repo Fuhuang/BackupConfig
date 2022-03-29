@@ -1,0 +1,94 @@
+set number
+set relativenumber
+set cursorline
+set wrap
+set hlsearch
+set showcmd
+set incsearch
+set wildmenu
+set ignorecase
+set smartcase
+set scrolloff=6
+set backspace=2
+set mouse=a
+set autoindent
+set hidden
+set updatetime=300
+set shortmess+=c
+
+map <LEADER>l  <C-w>l
+map <LEADER>k  <C-w>k
+map <LEADER>j  <C-w>j
+map <LEADER>h  <C-w>h
+map <LEADER><LEADER> :w !sudo tee %<CR>
+map <LEADER>big :r !figlet  
+                    
+"上次位置
+au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+
+syntax on
+
+call plug#begin()
+
+Plug 'vim-airline/vim-airline'
+Plug 'connorholyday/vim-snazzy'
+Plug 'preservim/nerdtree'
+Plug 'dense-analysis/ale'
+Plug 'neoclide/coc.nvim', {'branch': 'release'},
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+call plug#end()
+
+"""
+"coc.nvim
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+	""TAB补全
+if has('nvim')
+  inoremap <silent><expr> <c-space> coc#refresh()
+else
+  inoremap <silent><expr> <c-@> coc#refresh()
+endif
+
+	""手动打开补全Use <c-space> to trigger completion.
+
+inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
+                      		 \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+	" Make <CR> auto-select the first completion item and notify coc.nvim to
+	" format on enter, <cr> could be remapped by other vim plugin
+	""回车补全
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
+	" Use `[g` and `]g` to navigate diagnostics
+	" Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
+	" [g查找上/下一个代码报错
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+	" GoTo code navigation.
+	" 查找函数位置/定义
+xmap <leader>f  <Plug>(coc-format-selected)
+nmap <leader>f  <Plug>(coc-format-selected)
+	" Formatting selected code.
+	" 代码格式化
+nmap <leader>rn <Plug>(coc-rename)
+	" Symbol renaming.
+	" 重命名函数
+let g:coc_global_extensions=[
+	\'coc-json',
+	\'coc-vimlsp',
+	\'coc-clangd']
+"""
+
+
+color snazzy
+let g:SnazyTransparent = 1
+
